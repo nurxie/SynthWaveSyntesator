@@ -11,27 +11,21 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
 public class MainActivity extends Activity implements OnTouchListener {
-
-    //private View C4_but, D4_but, E4_but, F4_but, G4_but, A4_but, B4_but;
-    Button C4_but, D4_but, E4_but, F4_but, G4_but, A4_but, B4_but;
     private MediaPlayer C4sample, D4sample, E4sample, F4sample, G4sample, A4sample, B4sample;
 
     TextView tv;
-    LinearLayout linearLayout;
     float x;
     float y;
     String sDown;
     String sMove;
     String sUp;
 
-    int width;
     int height;
+    final static int millis = 70;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +41,6 @@ public class MainActivity extends Activity implements OnTouchListener {
         B4sample = MediaPlayer.create(this, R.raw.b4);
 
         Display display = getWindowManager().getDefaultDisplay();
-        width = display.getWidth();  // deprecated
         height = display.getHeight();  // deprecated
 
         tv = new TextView(this);
@@ -60,20 +53,20 @@ public class MainActivity extends Activity implements OnTouchListener {
         x = event.getX();
         y = event.getY();
         switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN: // нажатие
+            case MotionEvent.ACTION_DOWN:
                 sDown = "Down: " + x + "," + y;
                 sMove = ""; sUp = "";
                 break;
-            case MotionEvent.ACTION_MOVE: // движение
+            case MotionEvent.ACTION_MOVE:
                 sMove = "Move: " + x + "," + y;
                 break;
-            case MotionEvent.ACTION_UP: // отпускание
+            case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 sMove = "";
                 sUp = "Up: " + x + "," + y;
                 break;
+            default: break;
         }
-        int millis = 70;
         tv.setText(sMove + "HEIGHT:" + height);
         AudioTrack at;
         if(y < height*0.14){
@@ -119,7 +112,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 
     private AudioTrack generateTone(double freqHz, int durationMs)
     {
-        int sampleRate = 48000;  // 44100 Hz 48000
+        int sampleRate = 48000;  // 44100 Hz || 48000 Hz
         int count = (int)( sampleRate * 2.0 * (durationMs / 1000.0)) & ~1;
         short[] samples = new short[count];
         for(int i = 0; i < count; i += 2){
